@@ -23,7 +23,10 @@ Ensure your master branch is up-to-date:
 git pull origin master
 
 3. Merge the dev Branch into master
-git merge dev
+git merge dev --no-edit
+
+git merge master --no-edit
+
 If there are conflicts, Git will ask you to resolve them manually. After resolving, stage the changes:
 
 git add .
@@ -53,4 +56,162 @@ git pull origin dev
 
 
 them repush
+
+
+Symlink  not working on the server:: use command
+
+ln -s /home/vpfmfokm/dev.gethospease.com/storage/app/public /home/vpfmfokm/dev.gethospease.com/public/storage
+
+
+When having issues with when you add another column to migration best check is to check if it already exists
+
+Schema::table('case_reports', function (Blueprint $table) {
+            if (!Schema::hasColumn('case_reports', 'is_original')) {
+                $table->boolean('is_original')->nullable();
+            }
+
+            $table->unsignedBigInteger('user_id')->nullable()->change();
+        });
+
+
+for running cronejobs
+
+echo "Ran at: $(date)" >> /home/zjqdfnop/dev.spadeals.com.ng/storage/logs/queue.log && /usr/bin/php /home/zjqdfnop/dev.spadeals.com.ng/artisan queue:work --stop-when-empty >> /home/zjqdfnop/dev.spadeals.com.ng/storage/logs/queue.log 2>&1
+
+
+For SSH configuaration is it better to generate keys on server then add the public key to GitHub  profile using
+
+ssh-keygen -t rsa -b 4096 -C "billyhadiattaofeeq@gmail.com" to generate   . check if authecated ith ssh -T git@github.com.
+
+After then Add the private key to  your SSH_PRIVATE_KEY
+
+
+To create a new  branch and psh the update
+
+git checkout -b dev
+git push -u origin dev
+
+
+
+
+For processing redis locally  manuall process
+
+/c/laragon/bin/redis/redis-x64-5.0.14.1/redis-server.exe
+
+
+🛠️ How to Make Redis Start Automatically in Laragon
+Option 1: Enable Redis in Laragon's Services
+
+Option 2: Add Redis as a Service in Laragon Manually
+
+Go to: C:\laragon\bin\redis\redis-x64-5.0.14.1
+
+Open a terminal in that folder and run:
+
+redis-server --service-install redis.windows.conf --loglevel verbose
+
+Then start the Redis service
+
+redis-server --service-start
+
+
+To run queue: locally for dev purposes  using default queue:(databasw)
+
+create a ruun-worker.sh
+
+
+put this inside the runworker
+
+#!/bin/bash
+while true
+do
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting queue:work" >> /c/laragon/www/hospease/storage/logs/queue.log
+    /c/laragon/bin/php/php-8.1.10-Win32-vs16-x64/php.exe /c/laragon/www/hospease/artisan queue:work database --sleep=3 --tries=3 >> /c/laragon/www/hospease/storage/logs/queue.log 2>&1
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Finished queue:work" >> /c/laragon/www/hospease/storage/logs/queue.log
+    sleep 1
+done
+#php artisan queue:work database --timeout=60 --memory=128
+ 
+2) Procced to run the ./run-worker.sh the name of the file command 
+
+
+I have been having Class redis not found  i just added
+REDIS_CLIENT=predis to my ,env and it worked
+
+
+
+Call to undefined function Laravel\Horizon\Console\pcntl_async_signals()
+
+Reason is becase of windows it would work in Linux
+
+to use other lternative use 
+
+Use php artisan queue:work redis instead to process jobs locally.
+
+
+On production, us supervisr to start ohoruzon in cas it crashes..
+
+ for shared hosting server...
+
+create a script
+
+check-horizon.sh
+
+#!/bin/bash
+
+# Check if Horizon is running
+if ! pgrep -f "artisan horizon" > /dev/null
+then
+  cd /path/to/your/project
+  php artisan horizon >> /dev/null 2>&1 &
+fi
+
+chmod +x check-horizon.sh
+
+or 
+
+
+
+✅ Option 2: Run Horizon in screen or nohup (one-time startup)
+If your shared hosting allows screen or nohup, run Horizon in the background when deploying:
+nohup php artisan horizon > /dev/null 2>&1 &
+
+
+
+Steps to use redis on live serve
+
+
+install Laravel horizon
+install redis
+
+run php artisan horizon:install
+php artisan migrate
+
+in your .env make sure this  are present
+
+BROADCAST_DRIVER=redis
+CACHE_DRIVER=redis
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=redis
+SESSION_LIFETIME=120
+REDIS_CLIENT=predis
+
+Run the worker:
+php artisan horizon
+
+
+Check if redis is active
+redis-cli ping
+
+
+Redis AI EXPLANATION: 
+https://chatgpt.com/share/6814996a-0d20-8001-86f7-59de2a42bcbe
+
+
+
+
+
+
+
 
