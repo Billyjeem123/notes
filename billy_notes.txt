@@ -1,0 +1,56 @@
+Notes:: modify column
+
+Schema::table('your_table', function (Blueprint $table) {
+// Remove the old column
+$table->dropColumn('is_approved');
+
+// Add the new status column
+$table->enum('status', ['pending', 'approved', 'declined'])
+->default('pending')
+->after('your_previous_column'); // Optional: position the column
+});s
+
+Merge brahces
+
+To merge the dev branch into master, follow these steps:
+
+1. Switch to the master Branch
+
+git checkout master
+2. Pull the Latest Changes from Remote
+Ensure your master branch is up-to-date:
+
+git pull origin master
+
+3. Merge the dev Branch into master
+git merge dev
+If there are conflicts, Git will ask you to resolve them manually. After resolving, stage the changes:
+
+git add .
+git commit -m "Resolved merge conflicts between dev and master"
+4. Push the Merged Changes to Remote
+Alternative: Using Rebase (Optional)
+If you want a cleaner history, you can rebase instead of merging:
+
+bash
+Copy
+Edit
+git checkout master
+git pull origin master
+git rebase dev
+git push origin master
+This applies dev changes on top of master while keeping a linear history
+
+
+Incase the live domain is more updated than GitHub use
+Reset your local branch to match GitHub’s version:
+=
+git reset --hard origin/dev
+
+And
+
+git pull origin dev
+
+
+them repush
+
