@@ -171,6 +171,7 @@ chmod +x check-horizon.sh
 or 
 
 
+php artisan queue:work redis
 
 ✅ Option 2: Run Horizon in screen or nohup (one-time startup)
 If your shared hosting allows screen or nohup, run Horizon in the background when deploying:
@@ -210,9 +211,91 @@ https://chatgpt.com/share/6814996a-0d20-8001-86f7-59de2a42bcbe
 
 
 
-Cronjob constatntly chcking if horizon is active
+Exolainning caches cahing data::
 
-/usr/local/bin/php /home/jsraytec/live.hospeasehms.com/artisan horizon:status > /dev/null 2>&1 || (echo "$(date): Horizon not running, starting it..." >> /home/jsraytec/queue.log && /usr/local/bin/php /home/jsraytec/live.hospeasehms.com/artisan horizon >> /home/jsraytec/horizon.log 2>&1 &)
+Using simple databse cache:
+
+construct dynamic key for an hospital something liek this
+
+$hospitalId = auth()->user()->hospital_id; // or however you get the hospital
+
+$cacheKey = "hospital_{$hospitalId}_staff_list";
+
+$staffList = Cache::remember($cacheKey, now()->addMinutes(30), function () use ($hospitalId) {
+    return Staff::where('hospital_id', $hospitalId)->get();
+
+
+});
+
+ Updating Cache (when a hospital adds/updates staff):
+
+Cache::forget("hospital_{$hospitalId}_staff_list");
+// Then recache if needed
+
+
+Tags in redis.. Tags are just like  folder for a container inredis(container here is the user body making a request)
+e,g
+
+🎯 Your Mental Model:
+For Hospital with ID 1, you can do:
+
+🗂️ Tag: hospital_1
+Inside it, you can have:
+
+staff_list
+
+patient_list
+
+department_list
+
+appointments
+✅ What This Lets You Do:
+Cache::tags(['hospital_1'])->put('staff_list', $staffData, now()->addMinutes(30));
+Cache::tags(['hospital_1'])->put('patient_list', $patientData, now()->addMinutes(30));
+
+2. Get data from the “folder”'
+$staff = Cache::tags(['hospital_1'])->get('staff_list');
+
+3. Clear the entire “folder” if needed
+(e.g. when hospital data changes)
+
+Cache::tags(['hospital_1'])->flush();
+
+
+/usr/local/bin/php /home/jsraytec/live.hospeasehms.com/artisan schedule:run >> /home/jsraytec/live.hospeasehms.com/storage/logs/schedule.log 2>&1
+
+
+A situation where a project is to be pushed to other GitHub repo:
+
+steps to  do it.
+
+create a GitHub repo in the online repo
+
+2. ✅ In your local project, check your current remote
+git remote -v
+You'll see something like:
+origin  https://github.com/your-username/personal-project.git (fetch)
+origin  https://github.com/your-username/personal-project.git (push)
+3. ✅ Add the company repo as a new remote (e.g., call it company):
+git remote add company https://github.com/your-company/company-project.git
+reason for adding comay if if you use default origin it tell you orirgin  alredy ecists best is to rename the origin to another thing 
+git remote add company https://github.com/your-company/company-project.git
+4. ✅ Push the code to the company repository:
+
+🎯 Now You Have Two Remotes:
+origin → your personal GitHub repo
+
+company → your company's GitHub repo
+
+You can push to either:
+
+
+git push origin main    # pushes to your personal repo
+git push company main   # pushes to your company repo
+git push company main
+
+Dazzol
+
 
 
 
