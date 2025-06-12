@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fetch Branches</title>
+</head>
+<body>
+
+<button id="fetchBranchesBtn">Fetch Branches</button>
+
+<script>
+  document.getElementById('fetchBranchesBtn').addEventListener('click', () => {
+    fetch('https://live.hospeasehms.com/v0.1/api/admin/branches/fetch', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer 206|YbJt2tRhle9GJXcnUotUFvtfy1dcLWHif46Z6cBF6a1739d5'
+      // }eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjdhYWYxZmM4Yjk5MDgzMTIwZjRhN2E5IiwiZW1haWwiOiJkYXZpZEBjYW1wbGluazM2MC5jb20iLCJjb21wYW55TmFtZSI6IkJycmVlTHRkZGQiLCJmTmFtZSI6IkpvaGhuIiwibE5hbWUiOiJEb2VlIiwidHlwZSI6ImNvbXBhbnkiLCJyb2xlIjoic3VwZXJhZG1pbiIsImlhdCI6MTc0ODA0NDA3MiwiZXhwIjoxNzQ4MTMwNDcyfQ.Zer61lIyqMjfBMsqDaYYbOoPJ-a4Os-x05WGJseTHuo
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Response:", data);
+      if (data.status) {
+        data.data.forEach(branch => {
+          console.log(`Branch Name: ${branch.attributes.name}`);
+        });
+      } else {
+        console.error('Failed to fetch branches.');
+      }
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
+  });
+</script>
+
+</body>
+</html>

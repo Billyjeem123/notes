@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Trigger</title>
+</head>
+<body>
+
+  <button id="loginBtn">Login</button>
+
+  <script>
+    document.getElementById('loginBtn').addEventListener('click', function () {
+      const apiUrl = 'https://dev.hospeasehms.com/v0.1/api/auth/login';
+
+      const payload = {
+        email: 'lifecare@gmail.com',
+        password: '123'
+      };
+
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Login Success:', data);
+        alert('Login success! Token: ' + data.token); // Adjust based on actual response
+      })
+      .catch(error => {
+        console.error('Login Error:', error);
+        alert('Login failed.');
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -210,6 +210,11 @@ https://chatgpt.com/share/6814996a-0d20-8001-86f7-59de2a42bcbe
 
 
 
+Cronjob constatntly chcking if horizon is active
+
+/usr/local/bin/php /home/jsraytec/live.hospeasehms.com/artisan horizon:status > /dev/null 2>&1 || (echo "$(date): Horizon not running, starting it..." >> /home/jsraytec/queue.log && /usr/local/bin/php /home/jsraytec/live.hospeasehms.com/artisan horizon >> /home/jsraytec/horizon.log 2>&1 &)
+
+
 
 
 
