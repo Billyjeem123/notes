@@ -296,6 +296,8 @@ git push company main
 
 Dazzol
 
+Firebaseitegration: https://claude.ai/chat/b84aec3a-0e0f-40c1-a1d3-e62f28eda5e2
+
 
 
 
